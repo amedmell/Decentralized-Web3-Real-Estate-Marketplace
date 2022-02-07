@@ -3,6 +3,7 @@ package org.lsi.controllers;
 import org.lsi.security.params;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,8 +49,6 @@ public class AuthController {
 
 	@Autowired
 	UserRepository userRepository;
-	
-	
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -74,7 +74,8 @@ public class AuthController {
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
+												 userDetails.getId(),
+												 userDetails.getPublicAddress(),
 												 userDetails.getUsername(), 
 												 userDetails.getEmail(), 
 												 userDetails.getImage(),
@@ -184,7 +185,6 @@ public class AuthController {
   		String description = authenticationRequest.getDescription();
   		long phone = authenticationRequest.getPhone();
   		
-//  		UserModel userModel = new UserModel();
   		user.setImage(image);
   		user.setDescription(description);
   		user.setPhone(phone);
@@ -200,6 +200,32 @@ public class AuthController {
   		
   		
   		return "profile created";
+  	}
+  	
+  	
+  	
+  	
+  	@CrossOrigin(origins = "http://localhost:4200")
+  	@GetMapping("/user/{id}")
+  	public User getUserbyId(@PathVariable("id") String userId) {
+  		
+  		User userProfile=new User();
+  		
+  		Optional <User> user=userRepository.findById(userId);
+		if(user.isEmpty()) {
+			return null;
+		};
+		
+		userProfile.setUsername(user.get().getUsername());
+		userProfile.setDescription(user.get().getDescription());
+		userProfile.setEmail(user.get().getEmail());
+		userProfile.setId(user.get().getId());
+		userProfile.setPhone(user.get().getPhone());
+		userProfile.setImage(user.get().getImage());
+		userProfile.setPublicAddress(user.get().getPublicAddress());
+		
+		return userProfile;
+  	
   	}
   	
 }

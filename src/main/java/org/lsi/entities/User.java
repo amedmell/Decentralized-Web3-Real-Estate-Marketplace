@@ -34,6 +34,8 @@ public class User {
   private String image;
   private String description;
   private long phone;
+  
+  private String publicAddress;
 
   @DBRef
   private Set<Role> roles = new HashSet<>();
