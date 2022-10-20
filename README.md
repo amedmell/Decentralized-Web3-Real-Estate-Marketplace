@@ -4,4 +4,6 @@
 
 ## Each Service of the mircoservices is on its own branch
 
+## Frontend is found on the branch "frontend"
+
 ### Annonces is the service that focuses on the CRUD (create,read,update,delete) functionality for the real estate products.
